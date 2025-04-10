@@ -9,12 +9,7 @@ A command-line tool for generating and processing different types of entities wi
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-2. Install dependencies:
-```bash
-uv pip install python-dotenv requests
-```
-
-3. Run the project:
+2. Run the project:
 ```
 uv run main.py ARGUMENTS
 ```
