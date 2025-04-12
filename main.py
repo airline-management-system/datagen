@@ -42,7 +42,7 @@ def main():
         '-e', '--entity',
         type=str,
         required=True,
-        help='Entity to process (bank|employee|flight|passenger|payment|plane|refund|request|user)'
+        help=f'Entity to process ({"|".join([e.name.lower() for e in Entity])})'
     )
 
     parser.add_argument(

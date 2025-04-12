@@ -29,3 +29,17 @@ uv run main.py -e <entity_type> -a <number>
 # or
 uv run main.py --entity <entity_type> --amount <number>
 ```
+
+Use `--dry-run` to generate data without making HTTP requests:
+
+```bash
+uv run main.py -e <entity_type> -a <number> --dry-run
+```
+
+## 🧪 Running Tests
+
+Run the tests using `pytest`:
+
+```bash
+uv run pytest tests.py
+```
