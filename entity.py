@@ -109,27 +109,31 @@ class EntityFactory:
         """Create a flight entity with fake data matching the schema."""
         departure_time = self.fake.future_datetime(end_date='+30d')
         flight_duration = timedelta(hours=random.randint(1, 12))
+        departure_airport = self.fake.iata()
+        destination_airport = self.fake.iata(exclude=[departure_airport])
         
-        return {
-            'flight_number': f"{random.choice(['TK', 'PC', 'XQ', 'J2'])}{random.randint(100, 9999)}",  # Turkish airlines codes
-            'departure_airport': random.choice(['IST', 'SAW', 'ESB', 'AYT', 'ADB']),  # Major Turkish airports
-            'destination_airport': random.choice(['LHR', 'CDG', 'FRA', 'JFK', 'DXB']),  # International airports
-            'departure_datetime': departure_time.isoformat(),
-            'arrival_datetime': (departure_time + flight_duration).isoformat(),
-            'departure_gate_number': f"{random.choice(['A', 'B', 'C', 'D'])}{random.randint(1, 30)}",
-            'destination_gate_number': f"{random.choice(['A', 'B', 'C', 'D'])}{random.randint(1, 30)}",
-            'plane_registration': f"TC-{self.fake.bothify(text='???').upper()}",  # Turkish aircraft registration
-            'status': random.choice(['scheduled', 'delayed', 'cancelled', 'departed', 'arrived']),
-            'price': round(random.uniform(100, 2000), 2)
+        flight = {
+            'flight_number': self.fake.flight_number(),
+            'departure_airport': departure_airport,
+            'destination_airport': destination_airport,
+            'departure_datetime': self._format_datetime(departure_time),
+            'arrival_datetime': self._format_datetime(departure_time + flight_duration),
+            'departure_gate_number': self.fake.gate_number(),
+            'destination_gate_number': self.fake.gate_number(),
+            'plane_registration': self.fake.plane_registration(),
+            'status': self.fake.flight_status(),
+            'price': self.fake.flight_price()
         }
+
+        return { "flight": flight }
     
     def _create_passenger(self) -> Dict[str, Any]:
         """Create a passenger entity with fake data."""
         return {
             'national_id': self.fake.ssn(),
             'pnr_no': self.fake.pnr(),
-            'flight_id': random.randint(1, 1000),
-            'payment_id': random.randint(1, 1000),
+            'flight_id': self.fake.flight_id(),
+            'payment_id': self.fake.payment_id(),
             'baggage_allowance': self.fake.baggage_allowance(),
             'baggage_id': self.fake.baggage_id(),
             'fare_type': self.fake.fare_type(), 
@@ -143,10 +147,10 @@ class EntityFactory:
             'phone': self.fake.phone_number(),
             'gender': self.fake.gender(), 
             'birth_date': self._format_datetime(self.fake.birth_date()),
-            'cip_member': self.fake.boolean(),
-            'vip_member': self.fake.boolean(),
-            'disabled': self.fake.boolean(),
-            'child': self.fake.boolean()
+            'cip_member': False,
+            'vip_member': False,
+            'disabled': False,
+            'child': False
         }
     
     def _create_payment(self) -> Dict[str, Any]:

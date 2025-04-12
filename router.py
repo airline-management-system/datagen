@@ -15,7 +15,7 @@ class Router:
         self.endpoints = {
             Entity.BANK: "/banks",
             Entity.EMPLOYEE: "/employee/register",
-            Entity.FLIGHT: "/flights",
+            Entity.FLIGHT: "/flight/add",
             Entity.PASSENGER: "/passengers",
             Entity.PAYMENT: "/payments",
             Entity.PLANE: "/planes",

@@ -44,7 +44,7 @@ class DatagenFaker(Faker):
         return self.random_int(min=0, max=30)
 
     def baggage_id(self) -> str:
-        return self.bothify(text='??########')
+        return self.bothify(text='BAG#####KG')
 
     def extra_baggage(self) -> int:
         return self.random_int(min=0, max=2)
@@ -57,3 +57,25 @@ class DatagenFaker(Faker):
 
     def employee_id(self) -> str:
         return self.bothify(text='EMP####')
+        
+    def flight_id(self) -> str:
+        return self.random_int(1, 1000)
+
+    def payment_id(self) -> str:
+        return self.random_int(1, 1000)
+
+    def gate_number(self) -> str:
+        return self.bothify("??##", letters="ABCD")
+
+    def plane_registration(self) -> str:
+        return self.bothify("TC-???").upper()
+
+    def flight_price(self) -> int:
+        return self.random_int(100, 2000)
+
+    def flight_number(self) -> str:
+        registration = self.random_choices(elements=['TK', 'PC', 'XQ', 'CJ'], length=1)[0]
+        return self.numerify(f"{registration}-####")
+
+    def iata(self, exclude=[]) -> str:
+        return self.random_choices(elements=set(['IST', 'SAW', 'ESB', 'AYT', 'ADB']) - set(exclude), length=1)[0]
