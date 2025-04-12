@@ -14,7 +14,7 @@ class Router:
         self.base_url = base_url.rstrip('/')
         self.endpoints = {
             Entity.BANK: "/banks",
-            Entity.EMPLOYEE: "/employees",
+            Entity.EMPLOYEE: "/employee/register",
             Entity.FLIGHT: "/flights",
             Entity.PASSENGER: "/passengers",
             Entity.PAYMENT: "/payments",

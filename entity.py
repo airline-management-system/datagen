@@ -1,8 +1,8 @@
 from enum import Enum, auto
-from faker import Faker
 from datetime import datetime, timedelta
 import random
 from typing import Dict, Any, List
+from fake import DatagenFaker
 
 class Entity(Enum):
     BANK = auto()
@@ -25,8 +25,8 @@ class EntityFactory:
     """A factory class for creating different types of entities with fake data."""
     
     def __init__(self):
-        """Initialize the factory with Turkish locale."""
-        self.fake = Faker('tr_TR')
+        """Initialize the factory"""
+        self.fake = DatagenFaker()
     
     def create_entity(self, entity_type: Entity) -> Dict[str, Any]:
         """Create an entity of the specified type with fake data."""
@@ -81,33 +81,29 @@ class EntityFactory:
         }
     
     def _create_employee(self) -> Dict[str, Any]:
-        """Create an employee entity with fake data matching the database schema."""
-        now = datetime.now()
-        
-        return {
-            'id': random.randint(1, 1000),
-            'employee_id': self.fake.uuid4(),
-            'name': self.fake.first_name(),
-            'surname': self.fake.last_name(),
-            'email': self.fake.email(),
-            'phone': self.fake.phone_number()[:15],
-            'address': self.fake.address(),
-            'gender': random.choice(['male', 'female']),  # Matches gender_enum
-            'birth_date': self.fake.date_of_birth(minimum_age=18, maximum_age=65).isoformat(),
-            'hire_date': self.fake.date_between(start_date='-10y', end_date='today').isoformat(),
-            'position': self.fake.job(),
-            'role': random.choice(['hr', 'admin', 'flight_planner', 'passenger_services', 'ground_services']),  # Matches role_enum
-            'salary': round(random.uniform(30000, 150000), 2),
-            'status': random.choice(['active', 'inactive']),  # Matches status_enum
-            'manager_id': random.randint(1, 100) if random.choice([True, False]) else None,
-            'emergency_contact': self.fake.name(),
-            'emergency_phone': self.fake.phone_number()[:15],
-            'profile_image_url': self.fake.image_url(),
-            'created_at': now.isoformat(),
-            'updated_at': now.isoformat(),
-            'password_hash': self.fake.sha256(),
-            'salt': self.fake.sha1()
+        """Create an employee entity with fake data matching the specified format."""
+        employee = {
+            "employee_id": self.fake.employee_id(),
+            "name": self.fake.first_name(),
+            "surname": self.fake.last_name(),
+            "email": self.fake.email(),
+            "phone": self.fake.phone_number(),
+            "address": self.fake.address(),
+            "gender": self.fake.gender(),
+            "birth_date": self._format_datetime(self.fake.birth_date()),
+            "hire_date": self._format_datetime(self.fake.hire_date()),
+            "position": self.fake.position(),
+            "role": self.fake.role(),
+            "salary": self.fake.salary(),
+            "status": self.fake.status(),
+            "emergency_contact": self.fake.name(),
+            "emergency_phone": self.fake.phone_number(),
+            "profile_image_url": self.fake.image_url(),
+            "password_hash": self.fake.sha256(),
+            "salt": self.fake.sha1()
         }
+
+        return { "employee": employee }
     
     def _create_flight(self) -> Dict[str, Any]:
         """Create a flight entity with fake data matching the schema."""
@@ -123,34 +119,34 @@ class EntityFactory:
             'departure_gate_number': f"{random.choice(['A', 'B', 'C', 'D'])}{random.randint(1, 30)}",
             'destination_gate_number': f"{random.choice(['A', 'B', 'C', 'D'])}{random.randint(1, 30)}",
             'plane_registration': f"TC-{self.fake.bothify(text='???').upper()}",  # Turkish aircraft registration
-            'status': random.choice(['scheduled', 'delayed', 'cancelled', 'departed', 'arrived']),  # Matches flight_status_enum
+            'status': random.choice(['scheduled', 'delayed', 'cancelled', 'departed', 'arrived']),
             'price': round(random.uniform(100, 2000), 2)
         }
     
     def _create_passenger(self) -> Dict[str, Any]:
         """Create a passenger entity with fake data."""
         return {
-            'national_id': self.fake.ssn(),  # Will generate Turkish national ID numbers
-            'pnr_no': self.fake.bothify(text='??????'),
+            'national_id': self.fake.ssn(),
+            'pnr_no': self.fake.pnr(),
             'flight_id': random.randint(1, 1000),
             'payment_id': random.randint(1, 1000),
-            'baggage_allowance': random.randint(0, 3),
-            'baggage_id': self.fake.bothify(text='??########'),
-            'fare_type': random.choice(['economy', 'business', 'first']),
-            'seat': random.randint(1, 300),
-            'meal': random.choice(['vegetarian', 'non-vegetarian', 'vegan', 'halal', 'kosher']),
-            'extra_baggage': random.randint(0, 2),
-            'check_in': random.choice([True, False]),
+            'baggage_allowance': self.fake.baggage_allowance(),
+            'baggage_id': self.fake.baggage_id(),
+            'fare_type': self.fake.fare_type(), 
+            'seat': self.fake.seat_number(),
+            'meal': self.fake.meal(),
+            'extra_baggage': self.fake.extra_baggage(),
+            'check_in': self.fake.boolean(),
             'name': self.fake.first_name(),
             'surname': self.fake.last_name(),
             'email': self.fake.email(),
-            'phone': self.fake.phone_number(),  # Will generate Turkish phone numbers
-            'gender': random.choice(['male', 'female']),
-            'birth_date': self.fake.date_of_birth(minimum_age=1, maximum_age=100),
-            'cip_member': random.choice([True, False]),
-            'vip_member': random.choice([True, False]),
-            'disabled': random.choice([True, False]),
-            'child': random.choice([True, False])
+            'phone': self.fake.phone_number(),
+            'gender': self.fake.gender(), 
+            'birth_date': self._format_datetime(self.fake.birth_date()),
+            'cip_member': self.fake.boolean(),
+            'vip_member': self.fake.boolean(),
+            'disabled': self.fake.boolean(),
+            'child': self.fake.boolean()
         }
     
     def _create_payment(self) -> Dict[str, Any]:
@@ -195,9 +191,9 @@ class EntityFactory:
             'email': self.fake.email(),
             'password_hash': self.fake.sha256(),
             'salt': self.fake.sha1(),
-            'phone': self._generate_phone_number(),
-            'gender': random.choice(['male', 'female']),
-            'birth_date': self._format_datetime(self.fake.date_time_between(start_date='-100y', end_date='-18y')),
+            'phone': self.fake.phone_number(),
+            'gender': self.fake.gender(),
+            'birth_date': self._format_datetime(self.fake.birth_date()),
             'last_login': self._format_datetime(now),
             'last_password_change': self._format_datetime(now)
         }
@@ -215,6 +211,3 @@ class EntityFactory:
 
         return dt.isoformat('T', "seconds") + 'Z'
 
-    def _generate_phone_number(self) -> str:
-        """Generate a phone number in the format +905XXXXXXXX."""
-        return f"+905{random.randint(10000000, 99999999)}"
