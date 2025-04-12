@@ -17,8 +17,6 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 
-logger = logging.getLogger(__name__)
-
 # Base URL for the API from environment variables
 BASE_URL = os.getenv('BASE_URL')
 
@@ -26,12 +24,12 @@ factory = EntityFactory()
 router = Router(BASE_URL)
 
 def dry_run(entity_type: Entity, amount: int):
-    logger.info("Dry run mode - displaying generated data:")
+    logging.info("Dry run mode - displaying generated data:")
     entities = factory.create_entities(entity_type, amount)
     print(json.dumps(entities, indent=2, ensure_ascii=False))
 
 def run(entity_type: Entity, amount: int) -> None:
-    logger.info(f"Generating f{amount} entities of {entity_type}")
+    logging.info(f"Generating f{amount} entities of {entity_type}")
     entities = factory.create_entities(entity_type, amount)
     router.post(entity_type, entities)
 
@@ -67,7 +65,7 @@ def main():
         else:
             run(entity, args.amount)
     except ValueError as e:
-        logger.error(f"Error: {e}")
+        logging.error(f"Error: {e}")
         return 1
 
     return 0

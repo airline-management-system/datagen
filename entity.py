@@ -12,7 +12,6 @@ class Entity(Enum):
     PAYMENT = auto()
     PLANE = auto()
     REFUND = auto()
-    REQUEST = auto()
     USER = auto()
 
     @classmethod
@@ -188,6 +187,7 @@ class EntityFactory:
     
     def _create_user(self) -> Dict[str, Any]:
         """Create a user entity with fake data."""
+        now = datetime.now()
         return {
             'name': self.fake.first_name(),
             'surname': self.fake.last_name(),
@@ -195,8 +195,26 @@ class EntityFactory:
             'email': self.fake.email(),
             'password_hash': self.fake.sha256(),
             'salt': self.fake.sha1(),
-            'phone': self.fake.phone_number(),
+            'phone': self._generate_phone_number(),
             'gender': random.choice(['male', 'female']),
-            'birth_date': self.fake.date_of_birth(minimum_age=18, maximum_age=100),
-            'last_login': self.fake.date_time_this_year()
-        } 
+            'birth_date': self._format_datetime(self.fake.date_time_between(start_date='-100y', end_date='-18y')),
+            'last_login': self._format_datetime(now),
+            'last_password_change': self._format_datetime(now)
+        }
+
+    def _format_datetime(self, dt: datetime) -> str:
+        """Formats the given datetime to the accepted one by AMS."""
+        dt = datetime(
+            dt.year,
+            dt.month,
+            dt.day,
+            dt.hour,
+            dt.minute,
+            dt.second,
+        )
+
+        return dt.isoformat('T', "seconds") + 'Z'
+
+    def _generate_phone_number(self) -> str:
+        """Generate a phone number in the format +905XXXXXXXX."""
+        return f"+905{random.randint(10000000, 99999999)}"

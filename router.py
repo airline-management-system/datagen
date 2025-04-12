@@ -1,3 +1,4 @@
+import logging
 import requests
 from typing import List, Dict, Any
 from entity import Entity
@@ -19,8 +20,7 @@ class Router:
             Entity.PAYMENT: "/payments",
             Entity.PLANE: "/planes",
             Entity.REFUND: "/refunds",
-            Entity.REQUEST: "/requests",
-            Entity.USER: "/users",
+            Entity.USER: "/user/register",
         }
 
     def post(self, entity_type: Entity, data: List[Dict[str, Any]]) -> requests.Response:
@@ -43,6 +43,12 @@ class Router:
             raise ValueError(f"No endpoint found for entity: {entity_type.name}")
             
         url = f"{self.base_url}{endpoint}"
-        response = requests.post(url, json=data)
+
+        logging.info(f"Sending POST request to {url}")
+
+        response = requests.post(url, json=data[0])
         response.raise_for_status()  # Raise an exception for bad status codes
+
+        logging.info(f"POST {url} request successful")
+
         return response
