@@ -28,15 +28,16 @@ class EntityFactory:
         """Initialize the factory"""
         self.fake = DatagenFaker()
     
-    def create_entity(self, entity_type: Entity) -> Dict[str, Any]:
+    def create_entity(self, entity_type: Entity, **kwargs) -> Dict[str, Any]:
         """Create an entity of the specified type with fake data."""
         factory_method = self._get_factory_method(entity_type)
-        return factory_method()
+        entity_data = factory_method()
+        return {**entity_data, **kwargs}
 
-    def create_entities(self, entity_type: Entity, amount: int) -> List[Dict[str, Any]]:
+    def create_entities(self, entity_type: Entity, amount: int, **kwargs) -> List[Dict[str, Any]]:
         """Create an entity of the specified type with fake data."""
         factory_method = self._get_factory_method(entity_type)
-        return [factory_method() for _ in range(0, amount)]
+        return [{**factory_method(), **kwargs} for _ in range(0, amount)]
 
     def _get_factory_method(self, entity_type: Entity):
         """Return the corresponding factory method for entity type."""
@@ -82,7 +83,7 @@ class EntityFactory:
     
     def _create_employee(self) -> Dict[str, Any]:
         """Create an employee entity with fake data matching the specified format."""
-        employee = {
+        return {
             "employee_id": self.fake.employee_id(),
             "name": self.fake.first_name(),
             "surname": self.fake.last_name(),
@@ -102,8 +103,6 @@ class EntityFactory:
             "password_hash": self.fake.sha256(),
             "salt": self.fake.sha1()
         }
-
-        return { "employee": employee }
     
     def _create_flight(self) -> Dict[str, Any]:
         """Create a flight entity with fake data matching the schema."""
@@ -112,7 +111,7 @@ class EntityFactory:
         departure_airport = self.fake.iata()
         destination_airport = self.fake.iata(exclude=[departure_airport])
         
-        flight = {
+        return {
             'flight_number': self.fake.flight_number(),
             'departure_airport': departure_airport,
             'destination_airport': destination_airport,
@@ -124,8 +123,6 @@ class EntityFactory:
             'status': self.fake.flight_status(),
             'price': self.fake.flight_price()
         }
-
-        return { "flight": flight }
     
     def _create_passenger(self) -> Dict[str, Any]:
         """Create a passenger entity with fake data."""
@@ -167,10 +164,10 @@ class EntityFactory:
     def _create_plane(self) -> Dict[str, Any]:
         """Create a plane entity with fake data."""
         return {
-            'registration': f"TC-{random.randint(10000, 99999)}",  # Turkish aircraft registration prefix
-            'model': random.choice(['737', '747', '777', '787', 'A320', 'A330', 'A350', 'A380']),
-            'manufacturer': random.choice(['Boeing', 'Airbus']),
-            'capacity': random.randint(100, 500),
+            'registration': self.fake.bothify("TC-###"),
+            'model': random.choice(['A320', 'A330', 'A350', 'A380']),
+            'manufacturer': 'Airbus',
+            'capacity': self.fake.random_int(150, 200),
             'status': random.choice(['active', 'inactive'])
         }
     

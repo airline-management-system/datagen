@@ -13,14 +13,14 @@ class Router:
         """
         self.base_url = base_url.rstrip('/')
         self.endpoints = {
-            Entity.BANK: "/banks",
             Entity.EMPLOYEE: "/employee/register",
             Entity.FLIGHT: "/flight/add",
             Entity.PASSENGER: "/passengers",
-            Entity.PAYMENT: "/payments",
             Entity.PLANE: "/planes",
-            Entity.REFUND: "/refunds",
             Entity.USER: "/user/register",
+            Entity.BANK: "/banks",
+            Entity.PAYMENT: "/payments",
+            Entity.REFUND: "/refunds",
         }
 
     def post(self, entity_type: Entity, data: List[Dict[str, Any]]) -> requests.Response:
@@ -46,7 +46,7 @@ class Router:
 
         logging.info(f"Sending POST request to {url}")
 
-        response = requests.post(url, json=data[0])
+        response = requests.post(url, json=data)
         response.raise_for_status()  # Raise an exception for bad status codes
 
         logging.info(f"POST {url} request successful")
