@@ -25,15 +25,15 @@ uv run main.py --help
 Run the tool with the following arguments:
 
 ```bash
-uv run main.py -e <entity_type> -a <number>
+uv run main.py generate -e <entity_type> -a <number>
 # or
-uv run main.py --entity <entity_type> --amount <number>
+uv run main.py generate --entity <entity_type> --amount <number>
 ```
 
 Use `--dry-run` to generate data without making HTTP requests:
 
 ```bash
-uv run main.py -e <entity_type> -a <number> --dry-run
+uv run main.py generate -e <entity_type> -a <number> --dry-run
 ```
 
 ## 🧪 Running Tests
