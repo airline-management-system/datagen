@@ -36,6 +36,18 @@ Use `--dry-run` to generate data without making HTTP requests:
 uv run main.py generate -e <entity_type> -a <number> --dry-run
 ```
 
+Run the standard generation scheme:
+
+```bash
+uv run main.py scheme
+```
+
+Use `--dry-run` to execute the scheme without making HTTP requests:
+
+```bash
+uv run main.py scheme --dry-run
+```
+
 ## 🧪 Running Tests
 
 Run the tests using `pytest`:
