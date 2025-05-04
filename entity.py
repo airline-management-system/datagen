@@ -112,7 +112,6 @@ class EntityFactory:
             'departure_gate_number': self.fake.gate_number(),
             'destination_gate_number': self.fake.gate_number(),
             'plane_registration': self.fake.plane_registration(),
-            'status': self.fake.flight_status(),
             'price': self.fake.flight_price()
         }
     

@@ -29,7 +29,7 @@ class StandardScheme(BaseScheme):
 
     def build(self):
         # yield Entity.USER, self.factory.create_entities(Entity.USER, 0)
-        yield Entity.EMPLOYEE, self.factory.create_entities(Entity.EMPLOYEE, 0)
+        # yield Entity.EMPLOYEE, self.factory.create_entities(Entity.EMPLOYEE, 0)
 
         planes = self.factory.create_entities(Entity.PLANE, 2)
         yield Entity.PLANE, planes

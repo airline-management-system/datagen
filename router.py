@@ -14,10 +14,10 @@ class Router:
         self.base_url = base_url.rstrip('/')
         self.endpoints = {
             Entity.EMPLOYEE: "/employees",
-            Entity.FLIGHT: "/flight/add",
+            Entity.FLIGHT: "/flights",
             Entity.PASSENGER: "/passengers",
             Entity.PLANE: "/planes",
-            Entity.USER: "/user/register",
+            Entity.USER: "/users",
             Entity.BANK: "/banks",
             Entity.PAYMENT: "/payments",
             Entity.REFUND: "/refunds",
