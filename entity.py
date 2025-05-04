@@ -84,24 +84,16 @@ class EntityFactory:
     def _create_employee(self) -> Dict[str, Any]:
         """Create an employee entity with fake data matching the specified format."""
         return {
-            "employee_id": self.fake.employee_id(),
+            "national_id": self.fake.ssn(),
             "name": self.fake.first_name(),
             "surname": self.fake.last_name(),
             "email": self.fake.email(),
             "phone": self.fake.phone_number(),
-            "address": self.fake.address(),
             "gender": self.fake.gender(),
             "birth_date": self._format_datetime(self.fake.birth_date()),
-            "hire_date": self._format_datetime(self.fake.hire_date()),
-            "position": self.fake.position(),
+            "password": self.fake.password(),
+            "title": self.fake.title(),
             "role": self.fake.role(),
-            "salary": self.fake.salary(),
-            "status": self.fake.status(),
-            "emergency_contact": self.fake.name(),
-            "emergency_phone": self.fake.phone_number(),
-            "profile_image_url": self.fake.image_url(),
-            "password_hash": self.fake.sha256(),
-            "salt": self.fake.sha1()
         }
     
     def _create_flight(self) -> Dict[str, Any]:

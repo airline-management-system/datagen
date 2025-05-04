@@ -13,7 +13,7 @@ class Router:
         """
         self.base_url = base_url.rstrip('/')
         self.endpoints = {
-            Entity.EMPLOYEE: "/employee/register",
+            Entity.EMPLOYEE: "/employees",
             Entity.FLIGHT: "/flight/add",
             Entity.PASSENGER: "/passengers",
             Entity.PLANE: "/planes",
@@ -46,7 +46,7 @@ class Router:
 
         logging.info(f"Sending POST request to {url}")
 
-        response = requests.post(url, json=data)
+        response = requests.post(url, json=data, params={'batch': 'true'})
         response.raise_for_status()  # Raise an exception for bad status codes
 
         logging.info(f"POST {url} request successful")

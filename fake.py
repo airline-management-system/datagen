@@ -28,7 +28,7 @@ class DatagenFaker(Faker):
     def fare_type(self) -> str:
         return self.random_choices(elements=['economy', 'business', 'first'], length=1)[0]
 
-    def position(self) -> str:
+    def title(self) -> str:
         return self.job()
 
     def birth_date(self) -> str:
