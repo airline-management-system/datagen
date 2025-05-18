@@ -26,13 +26,13 @@ class DatagenFaker(Faker):
         return self.random_choices(elements=['standard', 'vegetarian', 'vegan', 'halal', 'kosher'], length=1)[0]
 
     def fare_type(self) -> str:
-        return self.random_choices(elements=['economy', 'business', 'first'], length=1)[0]
+        return self.random_choices(elements=['essentials', 'advantage', 'comfort'], length=1)[0]
 
     def title(self) -> str:
         return self.job()
 
     def birth_date(self) -> str:
-        return self.date_time_between(start_date='-100y', end_date='-18y')
+        return self.date_time_between(start_date='-50y', end_date='-18y')
 
     def hire_date(self) -> str:
         return self.date_time_between(start_date='-2y', end_date='now')

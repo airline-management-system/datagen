@@ -13,14 +13,12 @@ class Router:
         """
         self.base_url = base_url.rstrip('/')
         self.endpoints = {
+            Entity.CREDITCARD: "/creditcards",
             Entity.EMPLOYEE: "/employees",
             Entity.FLIGHT: "/flights",
             Entity.PASSENGER: "/passengers",
             Entity.PLANE: "/planes",
             Entity.USER: "/users",
-            Entity.BANK: "/banks",
-            Entity.PAYMENT: "/payments",
-            Entity.REFUND: "/refunds",
         }
 
     def post(self, entity_type: Entity, data: List[Dict[str, Any]]) -> requests.Response:
