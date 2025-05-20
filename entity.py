@@ -46,7 +46,7 @@ def calculate_flight_distance(departure_airport: str, arrival_airport: str) -> g
     # Calculate distance in kilometers
     return geodesic(dep_coords, arr_coords)
     
-def calculate_flight_duration(departure_airport: str, arrival_airport: str, cruising_kmh: float = 840.0, fixed_time: float = timedelta(minutes=45)) -> timedelta:
+def calculate_flight_duration(departure_airport: str, arrival_airport: str, cruising_kmh: float = 920.0, fixed_time: float = timedelta(minutes=45)) -> timedelta:
     distance = calculate_flight_distance(departure_airport, arrival_airport)
     airtime = timedelta(hours=(distance.kilometers / cruising_kmh))
     return airtime + fixed_time
@@ -183,9 +183,9 @@ class EntityFactory:
         """Create a plane entity with fake data."""
         return {
             'registration': self.fake.unique.bothify("TC-###"),
-            'model': random.choice(['A320', 'A330', 'A350', 'A380']),
-            'manufacturer': 'Airbus',
-            'capacity': self.fake.random_int(150, 200),
+            'model': '787',
+            'manufacturer': 'Boeing',
+            'capacity': 270,
             'status': random.choice(['active', 'inactive'])
         }
 

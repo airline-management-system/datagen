@@ -94,8 +94,7 @@ class DatagenFaker(Faker):
         return self.random_int(100, 2000)
 
     def flight_number(self) -> str:
-        registration = self.random_choices(elements=['TK', 'PC', 'XQ', 'CJ'], length=1)[0]
-        return self.numerify(f"{registration}-####")
+        return self.numerify(f"CJ-####")
 
     def iata(self, exclude=[]) -> str:
         return self.random_choices(elements=set(['IST', 'SAW', 'ESB', 'AYT', 'ADB']) - set(exclude), length=1)[0]
