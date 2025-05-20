@@ -1,8 +1,28 @@
 from faker import Faker
+from datetime import datetime, timedelta
+import random
 
 class DatagenFaker(Faker):
+    # Cache for departure times
+    _departure_times = None
+
     def __init__(self):
         super().__init__("tr_TR")
+
+    @classmethod
+    def _generate_departure_times(cls) -> list[datetime]:
+        if cls._departure_times is None:
+            times = []
+            base_time = datetime.now().replace(hour=8, minute=0, second=0, microsecond=0)
+            current_time = base_time
+            
+            # Generate times from 08:00 to 23:45
+            while current_time.day - base_time.day == 0:
+                times.append(base_time)
+                current_time += timedelta(minutes=45)
+            
+            cls._departure_times = times
+        return cls._departure_times
 
     def phone_number(self) -> str:
         return self.numerify("+905$#$######")
@@ -79,3 +99,6 @@ class DatagenFaker(Faker):
 
     def iata(self, exclude=[]) -> str:
         return self.random_choices(elements=set(['IST', 'SAW', 'ESB', 'AYT', 'ADB']) - set(exclude), length=1)[0]
+
+    def departure_datetime(self) -> datetime:
+        return random.choice(DatagenFaker._generate_departure_times())

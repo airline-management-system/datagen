@@ -4,6 +4,62 @@ import random
 from typing import Dict, Any, List
 from fake import DatagenFaker
 from mergedeep import merge, Strategy
+import airportsdata
+from geopy.distance import geodesic
+
+# Group airports in turkey by city
+tr_airports = {iata: data for iata, data in airportsdata.load('IATA').items() if data['country'] == 'TR'}
+airports_by_city = {}
+for airport_data in tr_airports.values():
+    city = airport_data['city']
+    if city not in airports_by_city:
+        airports_by_city[city] = []
+    airports_by_city[city].append(airport_data)
+
+def get_two_airports_in_distinct_cities_in_turkey() -> tuple[str, str]:
+    # Get list of cities that have airports
+    cities = list(airports_by_city.keys())
+
+    assert len(cities) > 2
+
+    # Randomly select two different cities
+    city1, city2 = random.sample(cities, 2)
+    
+    # Randomly select one airport from each city
+    airport1 = random.choice(airports_by_city[city1])
+    airport2 = random.choice(airports_by_city[city2])
+    
+    return airport1['iata'], airport2['iata']
+
+def calculate_flight_distance(departure_airport: str, arrival_airport: str) -> geodesic:
+    if departure_airport not in tr_airports or arrival_airport not in tr_airports:
+        raise ValueError("Invalid airport IATA code")
+    
+    # Get airport coordinates
+    dep = tr_airports[departure_airport]
+    arr = tr_airports[arrival_airport]
+    
+    # Create coordinate tuples
+    dep_coords = (dep['lat'], dep['lon'])
+    arr_coords = (arr['lat'], arr['lon'])
+    
+    # Calculate distance in kilometers
+    return geodesic(dep_coords, arr_coords)
+    
+def calculate_flight_duration(departure_airport: str, arrival_airport: str, cruising_kmh: float = 840.0, fixed_time: float = timedelta(minutes=45)) -> timedelta:
+    distance = calculate_flight_distance(departure_airport, arrival_airport)
+    airtime = timedelta(hours=(distance.kilometers / cruising_kmh))
+    return airtime + fixed_time
+
+def calculate_flight_price(departure_airport: str, arrival_airport: str, base_price: float = 100.0, price_per_km: float = 5.52) -> float:
+    # Calculate distance
+    distance = calculate_flight_distance(departure_airport, arrival_airport)
+
+    # Calculate price: base_price + (distance * price_per_km)
+    price = base_price + (distance.kilometers * price_per_km)
+    
+    # Round to 2 decimal places
+    return round(price, 2)
 
 class Entity(Enum):
     CREDITCARD = auto()
@@ -73,21 +129,22 @@ class EntityFactory:
     
     def _create_flight(self) -> Dict[str, Any]:
         """Create a flight entity with fake data matching the schema."""
-        departure_time = self.fake.future_datetime(end_date='+30d')
-        flight_duration = timedelta(hours=random.randint(1, 12))
-        departure_airport = self.fake.iata()
-        destination_airport = self.fake.iata(exclude=[departure_airport])
-        
+        departure_airport, destination_airport = get_two_airports_in_distinct_cities_in_turkey()
+        flight_duration = calculate_flight_duration(departure_airport, destination_airport)
+        price = calculate_flight_price(departure_airport, destination_airport)
+        departure_datetime = self.fake.departure_datetime() + timedelta(days=1)
+        arrival_datetime = departure_datetime + flight_duration
+
         return {
             'flight_number': self.fake.unique.flight_number(),
             'departure_airport': departure_airport,
             'destination_airport': destination_airport,
-            'departure_datetime': self._format_datetime(departure_time),
-            'arrival_datetime': self._format_datetime(departure_time + flight_duration),
+            'departure_datetime': self._format_datetime(departure_datetime),
+            'arrival_datetime': self._format_datetime(arrival_datetime),
             'departure_gate_number': self.fake.gate_number(),
             'destination_gate_number': self.fake.gate_number(),
             'plane_registration': self.fake.unique.plane_registration(),
-            'price': self.fake.flight_price()
+            'price': price,
         }
     
     def _create_passenger(self) -> Dict[str, Any]:
@@ -157,4 +214,3 @@ class EntityFactory:
         )
 
         return dt.isoformat('T', "seconds") + 'Z'
-
