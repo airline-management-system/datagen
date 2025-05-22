@@ -17,8 +17,8 @@ class DatagenFaker(Faker):
             current_time = base_time
             
             # Generate times from 08:00 to 23:45
-            while current_time.day - base_time.day == 0:
-                times.append(base_time)
+            while current_time.day - base_time.day < 1:
+                times.append(current_time)
                 current_time += timedelta(minutes=45)
             
             cls._departure_times = times
@@ -100,4 +100,5 @@ class DatagenFaker(Faker):
         return self.random_choices(elements=set(['IST', 'SAW', 'ESB', 'AYT', 'ADB']) - set(exclude), length=1)[0]
 
     def departure_datetime(self) -> datetime:
-        return random.choice(DatagenFaker._generate_departure_times())
+        delta = random.randint(1, 21)
+        return random.choice(DatagenFaker._generate_departure_times()) + timedelta(days=delta)

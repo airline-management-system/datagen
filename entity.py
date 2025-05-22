@@ -132,7 +132,7 @@ class EntityFactory:
         departure_airport, destination_airport = get_two_airports_in_distinct_cities_in_turkey()
         flight_duration = calculate_flight_duration(departure_airport, destination_airport)
         price = calculate_flight_price(departure_airport, destination_airport)
-        departure_datetime = self.fake.departure_datetime() + timedelta(days=1)
+        departure_datetime = self.fake.departure_datetime()
         arrival_datetime = departure_datetime + flight_duration
 
         return {
