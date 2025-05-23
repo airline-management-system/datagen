@@ -37,8 +37,14 @@ def run_generate(entity_type: Entity, amount: int) -> None:
 
 def run_scheme_dry_run():
     logging.info("Dry run mode - displaying the scheme generation:")
+    all_flights = []
     for entity, data in scheme:
         logging.info(f"Generated entity: {entity.name}, data: {json.dumps(data, indent=2, ensure_ascii=False)}")
+        if entity.name.lower() == "flight":
+            all_flights.extend(data if isinstance(data, list) else [data])
+    if all_flights:
+        print("All generated flights:")
+        print(json.dumps(all_flights, indent=2, ensure_ascii=False))
 
 def run_scheme():
     logging.info("Executing the standard generation scheme.")
