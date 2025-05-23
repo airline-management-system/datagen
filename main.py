@@ -50,6 +50,7 @@ def run_scheme():
     logging.info("Executing the standard generation scheme.")
     scheme.execute()
 
+
 def main():
     parser = argparse.ArgumentParser(description='Entity processing CLI')
     subparsers = parser.add_subparsers(dest='command', required=True)
