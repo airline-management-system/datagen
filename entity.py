@@ -161,7 +161,7 @@ class EntityFactory:
                 'gender': self.fake.gender(),
                 'disabled': False,
                 'seat': self.fake.seat_number(),
-                'birth_date': self._format_datetime(self.fake.birth_date()),
+                'birth_date': self.fake.birth_date().strftime('%Y-%m-%d'),
                 'child': False
             },
             "credit_card": self._create_creditcard(),
