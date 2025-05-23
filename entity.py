@@ -8,7 +8,7 @@ import airportsdata
 from geopy.distance import geodesic
 
 # Group airports in turkey by city
-tr_airports = {iata: data for iata, data in airportsdata.load('IATA').items()  if data['country'] == 'TR' and iata in {'ADB', 'IST', 'SAW', 'AYT', 'COV', 'ESB'}}
+tr_airports = {iata: data for iata, data in airportsdata.load('IATA').items()  if data['country'] == 'TR' and iata in {'ADB', 'IST', 'TZX', 'AYT', 'GZT', 'ESB'}}
 airports_by_city = {}
 for airport_data in tr_airports.values():
     city = airport_data['city']
