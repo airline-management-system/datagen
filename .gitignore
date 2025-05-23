@@ -13,3 +13,5 @@ wheels/
 # Others
 *.sql
 .idea
+
+.vscode/

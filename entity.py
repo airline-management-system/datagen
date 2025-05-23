@@ -56,7 +56,7 @@ def calculate_flight_price(departure_airport: str, arrival_airport: str, base_pr
     distance = calculate_flight_distance(departure_airport, arrival_airport)
 
     # Calculate price: base_price + (distance * price_per_km)
-    price = base_price + (distance.kilometers * price_per_km)
+    price = base_price + (distance.kilometers * price_per_km) + random.uniform(-200, 200)
 
     # Round to 2 decimal places
     return round(price, 2)
