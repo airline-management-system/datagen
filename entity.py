@@ -122,7 +122,7 @@ class EntityFactory:
             "phone": self.fake.unique.phone_number(),
             "gender": self.fake.gender(),
             "birth_date": self._format_datetime(self.fake.birth_date()),
-            "password": self.fake.password(),
+            "password": "123",
             "title": self.fake.title(),
             "role": self.fake.role(),
         }
